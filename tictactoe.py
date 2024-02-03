@@ -6,9 +6,12 @@ GREEN = '#46cf27'
 BG = '#b3bffc'
 turns = 1
 
-'''Check the win conditions'''
+'''Check the win conditions
+    this function access the text on buttons placed horizontally, vertically and diagonally to compare it to X and O. 
+    if any of the condition equals X then player 1 is the winner, else if it equals to O then player 2 is the winner'''
 def win_check():
-    ''' win conditions'''
+    
+    '''win conditions for player 1'''
     if A['text'] == B['text'] == C['text'] == 'X' or \
        D['text'] == E['text'] == F['text'] == 'X' or \
        G['text'] == H['text'] == I['text'] == 'X' or \
@@ -19,9 +22,10 @@ def win_check():
        G['text'] == E['text'] == C['text'] == 'X' :
         on_off_tile('disabled')
         game_end['text'] = 'Player 1 Wins!'
-        game_end['background'] = GREEN
         game_end.place(relx=0.5, rely=0.5, width=350, height=70, anchor='center')
         return True
+    
+    '''win conditions for player 2'''
     if A['text'] == B['text'] == C['text'] == 'O' or \
        D['text'] == E['text'] == F['text'] == 'O' or \
        G['text'] == H['text'] == I['text'] == 'O' or \
@@ -32,8 +36,7 @@ def win_check():
        G['text'] == E['text'] == C['text'] == 'O' :
         on_off_tile('disabled')
         game_end['text'] = 'Player 2 Wins!'
-        game_end['background'] = GREEN
-        game_end.place(relx=0.5, rely=0.5, width=350, height=70, anchor='center')
+        game_end.place(relx=0.5, rely=0.5, width=350, height=70, anchor='center')  # display win label for player 1
         return True
         
     global turns 
@@ -42,11 +45,12 @@ def win_check():
         on_off_tile('disabled') 
         game_end['text'] = "oh! It's a Tie"
         game_end['background'] = '#fce051'
-        game_end.place(relx=0.5, rely=0.5, width=350, height=70, anchor='center')
+        game_end.place(relx=0.5, rely=0.5, width=350, height=70, anchor='center')  # display win label for player 2
     return False
     
 
-''' on click of tiles in game, update the player turn and display "X" or "O" '''
+'''on click of tiles in game, update the player turn and display "X" or "O"
+    based on the background color value of the labels, which player's turn it is, is decided'''
 def update_tile(widget):
     
     
@@ -70,9 +74,12 @@ def update_tile(widget):
 '''reset the game'''
 def reset_game():
     
+    '''resetting background color values of all the labels'''
     player_1['background'] = GREEN
     player_2['background'] = RED
+    game_end['background'] = GREEN
     
+    '''resetting all the buttons to empty text and state to active'''
     A['text'] = ' '
     B['text'] = ' '
     C['text'] = ' '
@@ -83,11 +90,13 @@ def reset_game():
     H['text'] = ' '
     I['text'] = ' '
     on_off_tile('active')
+    
+    '''resetting turns to 1 and forgetting win or tie label'''
     global turns
     turns = 1
     game_end.place_forget()
     
-''' set tiles ative or disabled'''
+'''set tiles active or disabled'''
 def on_off_tile(state: str):
     
     A['state'] = state
@@ -113,11 +122,11 @@ play_board = Frame(window, bg=BG)
 play_board.columnconfigure((0, 1, 2), weight=1, uniform='a')
 play_board.rowconfigure((0, 1, 2), weight=1, uniform='a')
 
-''' welcome label'''
+'''welcome label'''
 Label(window, text="Let's Play", font=("arial", 30, "bold"), bg=BG).place(x=200, y=65, anchor='center')
 Label(window, text="Tic Tac Toe", font=("arial", 16), bg=BG).place(x=200, y=110, anchor='center')
 
-''' | A | B | C |'''
+'''| A | B | C |'''
 A = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(A))
 A.grid(row=0, column=0, sticky='news', padx=2.5, pady=2.5)
 B = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(B))
@@ -125,7 +134,7 @@ B.grid(row=0, column=1, sticky='news', padx=2.5, pady=2.5)
 C = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(C))
 C.grid(row=0, column=2, sticky='news', padx=2.5, pady=2.5)
 
-''' | D | E | F |'''
+'''| D | E | F |'''
 D = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(D))
 D.grid(row=1, column=0, sticky='news', padx=2.5, pady=2.5)
 E = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(E))
@@ -133,7 +142,7 @@ E.grid(row=1, column=1, sticky='news', padx=2.5, pady=2.5)
 F = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(F))
 F.grid(row=1, column=2, sticky='news', padx=2.5, pady=2.5)
 
-''' | G | H | I |'''
+'''| G | H | I |'''
 G = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(G))
 G.grid(row=2, column=0, sticky='news', padx=2.5, pady=2.5)
 H = Button(play_board, text=' ', font=('arial', 20, 'bold'), disabledforeground=RED, command=lambda: update_tile(H))
@@ -158,6 +167,6 @@ reset_button = Button(window, text='Reset Game', command=reset_game, font=('aria
 reset_button.place(relx=0.5, rely=0.87, anchor='center')
 
 '''Winner or Tie label'''
-game_end = Label(window, text='test', font=('arial', 20, 'bold'), anchor='center')
+game_end = Label(window, text='test', background=GREEN, font=('arial', 20, 'bold'), anchor='center')
 
 window.mainloop()
